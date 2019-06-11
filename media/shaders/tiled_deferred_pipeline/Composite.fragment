@@ -1,0 +1,22 @@
+#version 430
+
+in vec2 v_UV;
+
+layout(binding = 0) uniform sampler2D u_GBufferTexture0;
+layout(binding = 1) uniform sampler2D u_GBufferTexture1;
+layout(binding = 2) uniform sampler2D u_GBufferTexture2;
+layout(binding = 3) uniform sampler2D u_GBufferTexture3;
+layout(binding = 4) uniform sampler2D u_DepthTexture;
+
+layout (location = 0) out vec4 out_Color;
+
+void main()
+{
+	float depth = texture(u_DepthTexture, v_UV).r;
+	if (depth == 1.0)
+		discard;
+
+	vec3 lightAccumulation = texture(u_GBufferTexture3, v_UV).rgb;
+	vec3 ambient = vec3(0.1);
+	out_Color = vec4(lightAccumulation + ambient, 1.0);
+}
